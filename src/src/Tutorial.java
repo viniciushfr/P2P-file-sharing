@@ -39,16 +39,22 @@ package src;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import java.util.List;
 import java.util.Scanner;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import rice.environment.Environment;
 import rice.p2p.commonapi.*;
 import rice.p2p.commonapi.rawserialization.RawMessage;
-import rice.pastry.NodeHandle;
 import rice.pastry.NodeIdFactory;
 import rice.pastry.PastryNode;
 import rice.pastry.PastryNodeFactory;
@@ -78,6 +84,7 @@ public class Tutorial {
      * @param env the environment for these nodes
      * @param useDirect true for the simulator, false for the socket protocol
      */
+    Scanner scan = new Scanner(System.in);
     public Tutorial(int bindport, InetSocketAddress bootaddress, Environment env, boolean useDirect) throws Exception {
 
         // Generate the NodeIds Randomly
@@ -133,7 +140,7 @@ public class Tutorial {
         //NodeHandle nh = leafSet.get(i);
         // send the message directly to the node
         //app.sendMyMsgDirect(nh);
-        Scanner scan = new Scanner(System.in);
+        
         int opcao = 1;
         while (opcao > 0) {
             System.out.println("1 - Procurar arquivo.");
@@ -142,28 +149,51 @@ public class Tutorial {
             opcao = scan.nextInt();
             scan.nextLine();
             if (opcao == 1) {
-                System.out.print("Nome do arquivo: ");
-                String mensagem = scan.nextLine();
-                mensagem ="GET "+mensagem+" "+node.getId().toString();
-                for(int i=-leafSet.ccwSize();i<=leafSet.cwSize();i++){
-                    //enviando para eu mesmo!
+                String mensagem = lerCatalogo();
+                mensagem = "GET " + mensagem + " " + node.getId().toString();
+                for (int i = -leafSet.ccwSize(); i <= leafSet.cwSize(); i++) {
                     //if(i!=0){
-                        app.sendMyMsgDirect(leafSet.get(i), mensagem);
-                        env.getTimeSource().sleep(100);
+                    app.sendMyMsgDirect(leafSet.get(i), mensagem);
+                    env.getTimeSource().sleep(100);
                     //}
                 }
             } else if(opcao==2) {
+               System.out.print("Nome do arquivo: ");
                 String arquivo = scan.nextLine();
-                for(int i=-leafSet.ccwSize();i<=leafSet.cwSize();i++){
-                    //enviando para eu mesmo!
-                    //if(i!=0){
+                for (int i = -leafSet.ccwSize(); i <= leafSet.cwSize(); i++) {
+                    if (i != 0) {
                         app.sendMyFileDirect(leafSet.get(i), arquivo);
-                        leafSet.get(i);
                         env.getTimeSource().sleep(100);
-                    //}
+                    }
                 }
             } else if(opcao==3){
-                //mover arquivo para pasta compartilhada e atualizar a biblioteca xml
+                System.out.print("Caminho do artigo: ");
+                String caminhoArquivo = scan.nextLine();
+                System.out.print("Nome do arquivo: ");
+                String nomeArquivo = scan.nextLine();
+                System.out.print("Titulo do artigo: ");
+                String tituloArtigo = scan.nextLine();
+                System.out.print("Autor: ");
+                String autor = scan.nextLine();
+                System.out.print("Ano: ");
+                String ano = scan.nextLine();
+                try{
+                    File f = new File(caminhoArquivo);
+                    File f2 = new File(nomeArquivo);
+                    f.renameTo(f2);
+                    adicionarArtigoCatalago(nomeArquivo, tituloArtigo,autor,ano," "," ", " "," ");
+                }catch(Exception e){
+                     System.out.println("Erro ao mover arquivo " + e);
+                     e.printStackTrace();
+                }
+                
+                for (int i = -leafSet.ccwSize(); i <= leafSet.cwSize(); i++) {
+                    if (i != 0) {
+                        app.sendMyFileDirect(leafSet.get(i), "catalogo.xml");
+                        env.getTimeSource().sleep(100);
+                    }
+                }
+                
             }
 
         }
@@ -171,7 +201,99 @@ public class Tutorial {
         // wait a bit
         env.getTimeSource().sleep(100);
     }
+    public String lerCatalogo() {
+        try {
+            File xml = new File("catalogo.xml");
 
+            DocumentBuilderFactory dbFactory2 = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db2 = dbFactory2.newDocumentBuilder();
+            Document document = db2.parse(xml);
+
+            NodeList list = document.getElementsByTagName("article");
+
+            for (int i = 0; i < list.getLength(); i++) {
+                org.w3c.dom.Node node = list.item(i);
+                if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+
+                    Element eElement = (Element) node;
+                    int x = i + 1;
+                    System.out.println("Opção : " + x);
+                    System.out.println("Title : " + eElement.getElementsByTagName("title").item(0).getTextContent());
+                    System.out.println("Author : " + eElement.getElementsByTagName("author").item(0).getTextContent());
+                    System.out.println("Year : " + eElement.getElementsByTagName("year").item(0).getTextContent());
+                    System.out.println();
+                }
+            }
+
+            System.out.print("Opção: ");
+            int opcao = scan.nextInt();
+            scan.nextLine();
+            Element e = (Element) list.item(opcao - 1);
+            return e.getElementsByTagName("file").item(0).getTextContent();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    
+    public void adicionarArtigoCatalago(String file1,String titulo, String autor, String ano, String publicador, String paginas, String journal1, String v) throws ParserConfigurationException, SAXException, IOException{
+        try {
+            File xml = new File("catalogo.xml");
+
+            DocumentBuilderFactory dbFactory2 = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db2 = dbFactory2.newDocumentBuilder();
+            Document document = db2.parse(xml);
+
+                                   
+            Element root = (Element) document.getElementsByTagName("articles").item(0);
+
+            Element article = document.createElement("article");
+            root.appendChild(article);
+
+            Element title = document.createElement("title");
+            title.appendChild(document.createTextNode(titulo));
+            article.appendChild(title);
+            
+            Element file = document.createElement("file");
+            file.appendChild(document.createTextNode(file1));
+            article.appendChild(file);
+
+            Element author = document.createElement("author");
+            author.appendChild(document.createTextNode(autor));
+            article.appendChild(author);
+
+            Element journal = document.createElement("journal");
+            journal.appendChild(document.createTextNode(journal1));
+            article.appendChild(journal);
+            
+            Element volume = document.createElement("volume");
+            volume.appendChild(document.createTextNode(v));
+            article.appendChild(volume);
+
+            Element year = document.createElement("year");
+            year.appendChild(document.createTextNode(ano));
+            article.appendChild(year);
+
+            Element publisher = document.createElement("publisher");
+            publisher.appendChild(document.createTextNode(publicador));
+            article.appendChild(publisher);
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new File("catalago.xml"));
+            transformer.transform(source, result);
+
+            System.out.println("Done");
+            
+           
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+            
+    }
     /**
      * Usage: java [-cp FreePastry-<version>.jar]
      * rice.tutorial.appsocket.Tutorial localbindport bootIP bootPort numNodes
