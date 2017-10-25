@@ -1,0 +1,66 @@
+File xml = new File("articles.xml");
+
+                            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                            DocumentBuilder db = dbFactory.newDocumentBuilder();
+                            Document doc = db.parse(f);
+                            
+
+                            NodeList list = doc.getElementsByTagName("article");
+                            
+                            DocumentBuilderFactory dbFactory2 = DocumentBuilderFactory.newInstance();
+                            DocumentBuilder db2 = dbFactory2.newDocumentBuilder();
+                            Document document = db2.parse(xml);
+                            Element root = (Element) document.getElementsByTagName("articles").item(0);
+                            
+                            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                            
+                            Transformer transformer = transformerFactory.newTransformer();
+                            DOMSource source = new DOMSource(document);
+                            
+                            StreamResult result = new StreamResult(new File("articles.xml"));
+                        
+                            for (int i = 0; i < list.getLength(); i++) {
+                                org.w3c.dom.Node node = list.item(i);
+                                if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+
+                                    Element eElement = (Element) node;
+
+                                    System.out.println("Id : " + eElement.getAttribute("id"));
+                                    System.out.println("Title : " + eElement.getElementsByTagName("title").item(0).getTextContent());
+                                    System.out.println("Author : " + eElement.getElementsByTagName("author").item(0).getTextContent());
+                                    System.out.println("Journal : " + eElement.getElementsByTagName("journal").item(0).getTextContent());
+                                    //System.out.println("Volume : " + eElement.getElementsByTagName("volume").item(0).getTextContent());
+                                    //System.out.println("Number : " + eElement.getElementsByTagName("number").item(0).getTextContent());
+                                    //System.out.println("Pages : " + eElement.getElementsByTagName("pages").item(0).getTextContent());
+                                    System.out.println("Year : " + eElement.getElementsByTagName("year").item(0).getTextContent());
+                                    System.out.println("Publisher : " + eElement.getElementsByTagName("publisher").item(0).getTextContent());
+                                    System.out.println();
+                                    
+                                    Element article = document.createElement("article");
+                                    root.appendChild(article);
+                                    
+                                    article.setAttribute("id", eElement.getAttribute("id"));
+                                    
+                                    Element title = document.createElement("title");
+                                    title.appendChild(document.createTextNode(eElement.getElementsByTagName("title").item(0).getTextContent()));
+                                    article.appendChild(title);
+                                    
+                                    Element author = document.createElement("author");
+                                    author.appendChild(document.createTextNode(eElement.getElementsByTagName("author").item(0).getTextContent()));
+                                    article.appendChild(author);
+                                    
+                                    Element journal = document.createElement("journal");
+                                    journal.appendChild(document.createTextNode(eElement.getElementsByTagName("journal").item(0).getTextContent()));
+                                    article.appendChild(journal);
+                                    
+                                    Element year = document.createElement("year");
+                                    year.appendChild(document.createTextNode(eElement.getElementsByTagName("year").item(0).getTextContent()));
+                                    article.appendChild(year);
+                                    
+                                    Element publisher = document.createElement("publisher");
+                                    publisher.appendChild(document.createTextNode(eElement.getElementsByTagName("publisher").item(0).getTextContent()));
+                                    article.appendChild(publisher);
+                                    
+                                    transformer.transform(source, result);
+                                }
+                            }
