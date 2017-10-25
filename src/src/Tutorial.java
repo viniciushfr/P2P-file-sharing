@@ -39,6 +39,9 @@ package src;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.List;
 import java.util.Scanner;
 
@@ -134,14 +137,16 @@ public class Tutorial {
         int opcao = 1;
         while (opcao > 0) {
             System.out.println("1 - Procurar arquivo.");
-            System.out.println("2 - Enviar um arquivo.");
+            System.out.println("2 - Enviar arquivo para todos.");
+            System.out.println("3 - Compartilhar arquivo");
             opcao = scan.nextInt();
             scan.nextLine();
             if (opcao == 1) {
                 System.out.print("Nome do arquivo: ");
                 String mensagem = scan.nextLine();
-                mensagem +=" "+node.getId().toString();
+                mensagem ="GET "+mensagem+" "+node.getId().toString();
                 for(int i=-leafSet.ccwSize();i<=leafSet.cwSize();i++){
+                    //enviando para eu mesmo!
                     //if(i!=0){
                         app.sendMyMsgDirect(leafSet.get(i), mensagem);
                         env.getTimeSource().sleep(100);
@@ -150,6 +155,7 @@ public class Tutorial {
             } else if(opcao==2) {
                 String arquivo = scan.nextLine();
                 for(int i=-leafSet.ccwSize();i<=leafSet.cwSize();i++){
+                    //enviando para eu mesmo!
                     //if(i!=0){
                         app.sendMyFileDirect(leafSet.get(i), arquivo);
                         leafSet.get(i);
@@ -157,14 +163,7 @@ public class Tutorial {
                     //}
                 }
             } else if(opcao==3){
-                String arquivo = scan.nextLine();
-                for(int i=-leafSet.ccwSize();i<=leafSet.cwSize();i++){
-                    if(i!=0){
-                        System.out.println(app.checkIfContainsFile(leafSet.get(i), arquivo));
-                        leafSet.get(i);
-                        env.getTimeSource().sleep(100);
-                    }
-                }
+                //mover arquivo para pasta compartilhada e atualizar a biblioteca xml
             }
 
         }

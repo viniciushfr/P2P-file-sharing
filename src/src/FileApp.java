@@ -105,22 +105,36 @@ public class FileApp implements Application {
                     public void messageReceived(ByteBuffer bb) {
                         try {
                             String mensagem = new String(bb.array(), "UTF-8");
-                            System.out.println("Message recebida: " + new String(bb.array(), "UTF-8"));
+                            System.out.println("Message recebida: ");
                             String[] args = mensagem.split(" ");
-                            System.out.println("Nome do arquivo: "+ args[0]);
-                            System.out.println("Id do sender: " +args[1]);
+                            System.out.println("    Tipo:" + args[0]);
+                            System.out.println("    Id do sender: " +args[2]);
+                            
                             //FileApp.this.sendMyFileDirect(nh, mensagem);
                             //Pegar o nodo que enviou
                             NodeHandle e = null;
                             for(int i=-leafSet.ccwSize();i<=leafSet.cwSize();i++){ 
-                                System.out.println("Meu Leaf Set:" + leafSet.get(i).getId());    
-                                if(leafSet.get(i).getId().toString().equals(args[1])){
-                                    System.out.println("Nó esta no leafSet");
+                                //System.out.println("Meu Leaf Set:" + leafSet.get(i).getId());    
+                                if(leafSet.get(i).getId().toString().equals(args[2])){
+                                    //System.out.println("Nó esta no leafSet");
                                     e = leafSet.get(i);
                                 }            
                             }
                             if(e!=null){
-                                sendMyFileDirect(e, args[0]);
+                                if(args[0].equals("GET")){
+                                    final File file = new File(args[1]);
+                                    if (!file.exists()) {                            
+                                        sendMyMsgDirect(e, "MSG não-possuo-o-arquivo=("+file+") "+node.getId().toString());
+                                    }else{
+                                        sendMyFileDirect(e, args[1]);
+                                    }
+                                }else if(args[0].equals("MSG")){
+                                    System.out.println("    Mensagem: " + args[1]);
+                                }
+                                
+                                
+                            }else{
+                                System.out.println("Sender Nulo, n sei como caralhos pode entrar aqui");
                             }
                             
                             
