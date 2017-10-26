@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><articles>
+		<article>
+		<file>10994_2005_Article_422926.pdf</file>
+		<title>Genetic algorithms and machine learning</title>
+		<author>Goldberg, David E and Holland, John H</author>	
+		<journal>Machine Learning</journal>
+		<volume>3</volume>
+		<number>2</number>
+		<pages>95--99</pages>
+		<year>1988</year>
+		<publisher>Springer</publisher>		
+	</article>
+
+	<article>
+		<file>A_1007452223027.pdf</file>
+		<title>Machine learning for the detection of oil spills in satellite radar images</title>
+		<author>Kubat, Miroslav and Holte, Robert C and Matwin, Stan</author>	
+		<journal>Machine Learning</journal>
+		<volume>30</volume>
+		<number>2-3</number>
+		<pages>195--215</pages>
+		<year>1998</year>
+		<publisher>Springer</publisher>		
+	</article>
+
+	<article>
+		<file>n6a03.pdf</file>
+		<title>Uma proposta de arquitetura de software para constru{\c{c}}{\~a}o e integra{\c{c}}{\~a}o de ambientes virtuais de aprendizagem</title>
+		<author>Sizo, Amanda Monteiro and Lino, Adriano Del Pino and Favero, Eloi Luiz</author>	
+		<journal>RISTI-Revista Ib{\'e}rica de Sistemas e Tecnologias de Informa{\c{c}}{\~a}o</journal>
+		<number>6</number>
+		<pages>17--30</pages>
+		<year>2010</year>
+		<publisher>Associa{\c{c}}{\~a}o Ib{\'e}rica de Sistemas e Tecnologias de Informa{\c{c}}{\~a}o (AISTI)</publisher>		
+	</article>
+
+	<article>
+		<file>p43-balakrishnan.pdf</file>
+		<title>Looking up data in P2P systems</title>
+		<author>Balakrishnan, Hari and Kaashoek, M Frans and Karger, David and Morris, Robert and Stoica, Ion</author>	
+		<journal>Communications of the ACM</journal>
+		<volume>46</volume>
+		<number>2</number>
+		<pages>43--48</pages>
+		<year>2003</year>
+		<publisher>ACM</publisher>		
+	</article>
+
+	<article>
+		<file>1230-1227-1-PB.pdf</file>
+		<title>From data mining to knowledge discovery in databases</title>
+		<author>Fayyad, Usama and Piatetsky-Shapiro, Gregory and Smyth, Padhraic</author>	
+		<journal>AI magazine</journal>
+		<volume>17</volume>
+		<number>3</number>
+		<pages>37</pages>
+		<year>1996</year>
+	</article>
+
+	<article>
+		<file>The_WEKA_data_mining_software_An_update.pdf</file>
+		<title>The WEKA data mining software: an update</title>
+		<author>Hall, Mark and Frank, Eibe and Holmes, Geoffrey and Pfahringer, Bernhard and Reutemann, Peter and Witten, Ian H</author>	
+		<journal>ACM SIGKDD explorations newsletter</journal>
+		<volume>11</volume>
+		<number>1</number>
+		<pages>10--18</pages>
+		<year>2009</year>
+		<publisher>ACM</publisher>
+	</article>
+
+	<article>
+		<file>document.pdf</file>
+		<title>Avalia{\c{c}}{\~a}o de estrat{\'e}gias para redu{\c{c}}{\~a}o da deriva de agrot{\'o}xicos em pulveriza{\c{c}}{\~o}es hidr{\'a}ulicas</title>
+		<author>Cunha, JPAR and Teixeira, MM and Coury, JR and Ferreira, LR</author>	
+		<journal>Planta Daninha</journal>
+		<volume>21</volume>
+		<number>2</number>
+		<pages>352--332</pages>
+		<year>2003</year>
+		<publisher>SciELO Brasil</publisher>
+	</article>
+<article><title>teste</title><file>teste.txt</file><author>eu</author><journal> </journal><volume> </volume><year>2017</year><publisher> </publisher></article></articles>
